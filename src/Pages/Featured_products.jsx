@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Product_card from "../components/product_card";
+import Product_card from "../components/Product_card";
 import Button from "../components/Button";
 
 const FeaturedProducts = () => {

@@ -19,8 +19,8 @@ function Default() {
             </div>
 
             <div className='flex gap-2'>
-               <Link className='material-symbols-outlined transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>search</Link>
-               <Link className='material-symbols-outlined transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>shopping_cart</Link>
+               <button className='material-symbols-outlined transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>search</button>
+               <button className='material-symbols-outlined transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>shopping_cart</button>
                <Button text="Sign In" E_classes="w-20 h-10" />
             </div>
          </nav>
