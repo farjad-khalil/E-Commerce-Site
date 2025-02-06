@@ -12,7 +12,7 @@ function Navbar() {
                   navigate('/')
                }} >LOGO</button>
             
-               <Link className='transition-all  hover:bg-black duration-300 p-2.5 rounded-lg'>Featured Products</Link>
+               <button onClick={()=>{navigate('/featured_products')}} className='transition-all  hover:bg-black duration-300 p-2.5 rounded-lg'>Featured Products</button>
                <Link className='transition-all  hover:bg-black duration-300 p-2.5 rounded-lg'>Link 1</Link>
                <Link className='transition-all  hover:bg-black duration-300 p-2.5 rounded-lg'>Link 1</Link>
 

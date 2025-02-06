@@ -1,0 +1,30 @@
+@layer utilities {
+    .custom-grid {
+      @apply grid grid-cols-1 gap-12;
+    }
+  
+    @media (min-width: 500px) {
+      .custom-grid {
+        @apply grid-cols-1;
+      }
+    }
+  
+    @media (min-width: 800px) {
+      .custom-grid {
+        @apply grid-cols-2;
+      }
+    }
+  
+    @media (min-width: 1100px) {
+      .custom-grid {
+        @apply grid-cols-3;
+      }
+    }
+  
+    @media (min-width: 1400px) {
+      .custom-grid {
+        @apply grid-cols-4;
+      }
+    }
+  }
+  
