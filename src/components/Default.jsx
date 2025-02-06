@@ -29,7 +29,7 @@ function Default() {
          <div className="grid grid-cols-4 gap-10">
             {/* Column 1: Logo & Social Icons */}
             <div className="flex flex-col">
-               <div className="text-3xl font-bold">LOGO</div>
+               <div className="text-3xl font-bold">SwiftCart</div>
                <div className="flex mt-10 space-x-10">
                   <i className="fab fa-facebook text-2xl hover:cursor-pointer hover:text-neutral-300"></i>
                   <i className="fab fa-twitter text-2xl hover:cursor-pointer hover:text-neutral-300"></i>
