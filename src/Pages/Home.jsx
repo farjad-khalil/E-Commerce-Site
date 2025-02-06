@@ -1,6 +1,5 @@
 import Button from "../components/Button"
 import { useNavigate } from "react-router"
-import TrendingProducts from "../components/Trending";
 import Testimonials from "../components/Testimonials";
 function Home() {
   const navigate = useNavigate();
