@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import './global.css';
 body{
-  background-color: rgb(9, 9, 9);
+  background-color: rgb(10, 1, 22);
   color: white;
   padding:40px 90px;
 }
