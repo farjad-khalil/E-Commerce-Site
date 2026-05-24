@@ -1,92 +1,86 @@
-import React from 'react'
-import { Link, Outlet, useNavigate } from 'react-router'
+import { useState } from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { FiMenu, FiSearch, FiShoppingBag, FiX } from 'react-icons/fi'
 import Button from './Button'
+import Footer from './Footer'
+import { useCart } from '../context/CartContext'
+
+const navLinks = [
+   { label: 'Home', to: '/' },
+   { label: 'Shop', to: '/featured-products' },
+   { label: 'About', to: '/about' },
+   { label: 'Contact', to: '/contact' },
+]
+
 function Default() {
    const navigate = useNavigate()
+   const { count } = useCart()
+   const [menuOpen, setMenuOpen] = useState(false)
+
+   const handleNavigate = (path) => {
+      navigate(path)
+      setMenuOpen(false)
+   }
+
    return (
-      <div >
+      <div className='relative min-h-screen overflow-hidden px-4 py-4 text-white md:px-6 lg:px-8'>
+         <div className='pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem] bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.18),_transparent_45%),linear-gradient(180deg,_rgba(15,23,42,0.96),_rgba(2,6,23,1))]' />
+         <div className='mx-auto flex min-h-screen w-full max-w-7xl flex-col'>
+            <header className='sticky top-4 z-40 rounded-[1.75rem] border border-white/10 bg-slate-950/75 px-4 py-4 shadow-2xl shadow-slate-950/35 backdrop-blur-xl md:px-6'>
+               <div className='flex items-center justify-between gap-4'>
+                  <button className='text-left text-2xl font-semibold tracking-tight text-white' onClick={() => handleNavigate('/')}>
+                     SwiftCart
+                  </button>
 
-         <nav className='flex justify-between gap-10 '>
-            <div className='flex gap-10'>
-               <button className='text-3xl font-bold hover:cursor-pointer' onClick={() => {
-                  navigate('/')
-               }} >SwiftCart</button>
+                  <nav className='hidden items-center gap-2 md:flex'>
+                     {navLinks.map((link) => (
+                        <NavLink
+                           key={link.label}
+                           to={link.to}
+                           className={({ isActive }) =>
+                              `rounded-full px-4 py-2 text-sm font-medium transition ${isActive ? 'bg-white text-slate-950' : 'text-white/70 hover:bg-white/5 hover:text-white'}`
+                           }
+                        >
+                           {link.label}
+                        </NavLink>
+                     ))}
+                  </nav>
 
-               <button onClick={() => { navigate('/featured_products') }} className='transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>Featured Products</button>
-               <button onClick={() => { navigate('/aboutus') }}  className='transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>About us</button>
-               <button onClick={() => { navigate('/contactus') }}  className='transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>Contact us</button>
-
-            </div>
-
-            <div className='flex gap-2'>
-               <button className='material-symbols-outlined transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>search</button>
-               <button className='material-symbols-outlined transition-all  hover:bg-neutral-800 duration-300 p-2.5 rounded-lg'>shopping_cart</button>
-               <Button text="Sign In" E_classes="w-20 h-10" />
-            </div>
-         </nav>
-         <Outlet />
-         <hr className='mt-15 mb-15 text-neutral-700' />
-         <div className="grid grid-cols-4 gap-10">
-            {/* Column 1: Logo & Social Icons */}
-            <div className="flex flex-col">
-               <div className="text-3xl font-bold">SwiftCart</div>
-               <div className="flex mt-10 space-x-10">
-                  <i className="fab fa-facebook text-2xl hover:cursor-pointer hover:text-neutral-300"></i>
-                  <i className="fab fa-twitter text-2xl hover:cursor-pointer hover:text-neutral-300"></i>
-                  <i className="fab fa-instagram text-2xl hover:cursor-pointer hover:text-neutral-300"></i>
-               </div>
-               <div className='mt-10'>
-                  <div className='font-semibold mb-1'>Subscribe To Our Newsletter</div>
-                  <div className='border p-2 rounded-sm flex justify-between border-neutral-700'>
-                     <input placeholder='@gmail.com' className='outline-none focus:ring-0' />
-                     <button className='hover:cursor-pointer hover:text-neutral-400'>Subscribe</button>
+                  <div className='flex items-center gap-2'>
+                     <button className='hidden rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:border-cyan-200/30 hover:bg-cyan-300 hover:text-slate-950 md:inline-flex' onClick={() => handleNavigate('/featured-products')}>
+                        <FiSearch />
+                     </button>
+                     <button className='relative rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:border-cyan-200/30 hover:bg-cyan-300 hover:text-slate-950' onClick={() => handleNavigate('/cart')}>
+                        <FiShoppingBag />
+                        {count > 0 ? <span className='absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-cyan-300 px-1.5 py-0.5 text-[10px] font-semibold text-slate-950'>{count}</span> : null}
+                     </button>
+                     <Button text='Sign in' variant='ghost' E_classes='hidden md:inline-flex' onClick={() => handleNavigate('/contact')} />
+                     <button className='rounded-full border border-white/10 bg-white/5 p-3 text-white md:hidden' onClick={() => setMenuOpen((value) => !value)}>
+                        {menuOpen ? <FiX /> : <FiMenu />}
+                     </button>
                   </div>
                </div>
-            </div>
 
-            {/* Column 2 */}
-            <div className="flex flex-col space-y-2">
-               <div className='font-semibold text-xl mb-6'>Call us</div>
+               {menuOpen ? (
+                  <div className='mt-4 grid gap-2 border-t border-white/10 pt-4 md:hidden'>
+                     {navLinks.map((link) => (
+                        <button key={link.label} className='rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white/80' onClick={() => handleNavigate(link.to)}>
+                           {link.label}
+                        </button>
+                     ))}
+                     <button className='rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white/80' onClick={() => handleNavigate('/cart')}>
+                        View cart
+                     </button>
+                  </div>
+               ) : null}
+            </header>
 
-               <div className='text-neutral-500 '>Pakistan</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>+92 301 9898989</div>
-               <br></br>
-               <div className='text-neutral-500 '>United States</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>+48 415 7574737</div>
-            </div>
+            <main className='flex-1'>
+               <Outlet />
+            </main>
 
-            {/* Column 3 */}
-            <div className="flex flex-col space-y-2">
-               <div className='font-semibold text-xl mb-6'>Company</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Cases</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Services</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>About Us</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Blog</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Contact Us</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Career</div>
-            </div>
-
-            {/* Column 4 */}
-            <div className="flex flex-col space-y-2">
-               <div className='font-semibold text-xl mb-6'>Details</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Services</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Technologies</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Expertise</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Developers</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>Industry</div>
-               <div className='text-neutral-500 hover:text-white hover:cursor-pointer'>3</div>
-            </div>
+            <Footer />
          </div>
-         <hr className='mt-15 mb-15 text-neutral-700' />
-         <div className=''>
-
-            <div className='text-neutral-400'>
-               Built by Farjad
-            </div>
-            <div className='text-neutral-400 mt-2 '>Copyright © 2025 | All rights reserved</div>
-         </div>
-
-
       </div>
    )
 }

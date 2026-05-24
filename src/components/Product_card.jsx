@@ -1,19 +1,53 @@
-
+/* eslint-disable react/prop-types */
 import Button from './Button'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
+import { formatPrice } from '../data/products'
+import { useCart } from '../context/CartContext'
 
-function Product_card({ title, price, rating,index,image_add}) {
+function Product_card({ product, title, price, rating, index, image_add, onAdd }) {
     const navigate = useNavigate()
+    const { addToCart } = useCart()
+    const productData = product ?? { id: index, title, price, rating, image: image_add }
+    const imageSource = productData.image ?? image_add
+
+    const handleAddToCart = (event) => {
+        event.stopPropagation()
+        if (productData?.id) {
+            if (onAdd) {
+                onAdd(productData)
+            } else {
+                addToCart(productData, 1)
+            }
+        }
+    }
+
     return (
-        <div className='w-72 h-88 border rounded-2xl flex flex-col items-center justify-between pb-2 mb-10 transition-all duration-300 hover:shadow-lg hover:shadow-neutral-500 hover:scale-105' >
-            <img src={"https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} alt="Placeholder" className=" h-44 w-full rounded-t-2xl object-cover hover:cursor-pointer" onClick={()=>{navigate(`/products/${index}`)}}/>
-            <div className='w-full h-full flex flex-col justify-evenly px-3 ' onClick={()=>{navigate(`/products/${index}`)}}>
-                <div className='font-semibold text-xl'>{title}</div>
-                <div className='text-neutral-300'>{price}</div>
-                <div className='text-neutral-400'>{rating}★</div>
+        <article
+            className='group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-[0_20px_80px_rgba(15,23,42,0.45)] transition duration-300 hover:-translate-y-1 hover:border-cyan-200/30 hover:bg-white/[0.07]'
+            onClick={() => navigate(`/products/${productData.id}`)}
+        >
+            <div className='relative overflow-hidden'>
+                <img src={imageSource} alt={productData.title} className='h-56 w-full object-cover transition duration-500 group-hover:scale-105' />
+                <div className='absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent' />
+                <div className='absolute left-4 top-4 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur'>
+                    {productData.category ?? 'Featured'}
+                </div>
             </div>
-            <Button text="Add to Cart" E_classes="w-68" />
-        </div>
+
+            <div className='space-y-4 p-5 text-left'>
+                <div className='space-y-2'>
+                    <h3 className='text-xl font-semibold text-white'>{productData.title}</h3>
+                    <p className='text-sm text-white/60'>{productData.description?.slice(0, 92) ?? 'Product-ready details with polished presentation.'}</p>
+                </div>
+
+                <div className='flex items-center justify-between text-sm text-white/70'>
+                    <span>{formatPrice(productData.price ?? 0)}</span>
+                    <span>{productData.rating?.toFixed?.(1) ?? rating ?? 0}★</span>
+                </div>
+
+                <Button text='Add to cart' E_classes='w-full' onClick={handleAddToCart} />
+            </div>
+        </article>
     )
 }
 

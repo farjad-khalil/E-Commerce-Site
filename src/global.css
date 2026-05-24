@@ -1,30 +1,18 @@
 @layer utilities {
-    .custom-grid {
-      @apply grid grid-cols-1 gap-12;
-    }
-  
-    @media (min-width: 500px) {
-      .custom-grid {
-        @apply grid-cols-1;
-      }
-    }
-  
-    @media (min-width: 800px) {
-      .custom-grid {
-        @apply grid-cols-2;
-      }
-    }
-  
-    @media (min-width: 1100px) {
-      .custom-grid {
-        @apply grid-cols-3;
-      }
-    }
-  
-    @media (min-width: 1400px) {
-      .custom-grid {
-        @apply grid-cols-4;
-      }
-    }
+  .glass-card {
+    @apply rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl shadow-slate-950/30 backdrop-blur;
   }
+
+  .surface {
+    @apply rounded-[2rem] border border-white/10 bg-slate-950/70 shadow-2xl shadow-slate-950/30 backdrop-blur;
+  }
+
+  .section-shell {
+    @apply space-y-8 py-8 md:py-12;
+  }
+
+  .eyebrow {
+    @apply text-sm uppercase tracking-[0.35em] text-cyan-200/70;
+  }
+}
   

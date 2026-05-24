@@ -1,65 +1,79 @@
-import { useState } from "react";
-import Product_card from "../components/Product_card";
-import Button from "../components/Button";
+import { useState } from 'react'
+import Product_card from '../components/Product_card'
+import Button from '../components/Button'
+import { products } from '../data/products'
 
 const FeaturedProducts = () => {
-  const [showAll, setShowAll] = useState(false);
+  const [search, setSearch] = useState('')
+  const [category, setCategory] = useState('All')
+  const [sortMode, setSortMode] = useState('featured')
+  const [showAll, setShowAll] = useState(false)
+
+  const categories = ['All', ...new Set(products.map((product) => product.category))]
+
+  const filteredProducts = products
+    .filter((product) => {
+      const matchesSearch = `${product.title} ${product.description} ${product.category}`.toLowerCase().includes(search.toLowerCase())
+      const matchesCategory = category === 'All' || product.category === category
+      return matchesSearch && matchesCategory
+    })
+    .sort((left, right) => {
+      if (sortMode === 'price-low') return left.price - right.price
+      if (sortMode === 'price-high') return right.price - left.price
+      if (sortMode === 'rating') return right.rating - left.rating
+      return right.reviewCount - left.reviewCount
+    })
+
+  const visibleProducts = showAll ? filteredProducts : filteredProducts.slice(0, 9)
 
   return (
-    <div>
-      <div className="text-4xl font-semibold lg:m-10 lg:ml-5 ml-0 m-10">
-        Featured Products
-      </div> 
-      <div className="flex justify-center">
-        <div className="custom-grid">
-          {products.map((product) => (
-            <div
-              key={product.index}
-              className={`transition-all duration-700 ease-in-out ${
-                product.index >= 9 && !showAll
-                  ? "max-h-0 opacity-0 scale-90 overflow-hidden"
-                  : "max-h-[500px] opacity-100 scale-100"
-              }`}
-            >
-              <Product_card
-                index={product.index}
-                title={product.title}
-                price={product.price}
-                rating={product.rating}
-              />
-            </div>
-          ))}
+    <section className='space-y-8 py-8 md:py-12'>
+      <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
+        <div>
+          <p className='text-sm uppercase tracking-[0.35em] text-cyan-200/70'>Catalog</p>
+          <h1 className='mt-2 text-4xl font-semibold tracking-tight text-white md:text-5xl'>Featured products</h1>
+          <p className='mt-3 max-w-2xl text-white/65'>Search, sort, and filter the catalog to simulate a more complete shopping experience.</p>
+        </div>
+        <div className='rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70'>
+          {filteredProducts.length} products available
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <Button
-          onClick={() => setShowAll(!showAll)}
-          E_classes="w-32 h-10 transition-all duration-300"
-          text={showAll ? "Show Less" : "Show More"}
-        />
+      <div className='grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-4 md:grid-cols-[1.5fr_0.7fr_0.7fr] md:p-5'>
+        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder='Search products, categories, or features' className='rounded-full border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-cyan-200/40' />
+        <select value={category} onChange={(event) => setCategory(event.target.value)} className='rounded-full border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-cyan-200/40'>
+          {categories.map((item) => (
+            <option key={item}>{item}</option>
+          ))}
+        </select>
+        <select value={sortMode} onChange={(event) => setSortMode(event.target.value)} className='rounded-full border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-cyan-200/40'>
+          <option value='featured'>Featured first</option>
+          <option value='rating'>Top rated</option>
+          <option value='price-low'>Price: low to high</option>
+          <option value='price-high'>Price: high to low</option>
+        </select>
       </div>
-    </div>
-  );
-};
 
-export default FeaturedProducts;
+      {visibleProducts.length > 0 ? (
+        <div className='grid gap-5 lg:grid-cols-3'>
+          {visibleProducts.map((product) => (
+            <Product_card key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className='rounded-[2rem] border border-white/10 bg-white/5 p-10 text-center text-white/65'>
+          No products matched your search.
+        </div>
+      )}
 
-export const products = [
-  { index:1  , title: "Wireless Bluetooth Headphones", price: "$49.99", rating: "3.5" },
-  { index:2  , title: "Smartwatch Pro Series", price: "$89.99", rating: "4.7" },
-  { index:3  , title: "Gaming Mouse RGB", price: "$29.99", rating: "3.3" },
-  { index:4  , title: "Mechanical Keyboard", price: "$79.99", rating: "2.6" },
-  { index:5  , title: "Ultra HD 4K Monitor", price: "$299.99", rating: "4.8" },
-  { index:6  , title: "Portable Power Bank", price: "$39.99", rating: "4.4" },
-  { index:7  , title: "Noise Cancelling Earbuds", price: "$59.99", rating: "3.7" },
-  { index:8  , title: "Wireless Charging Pad", price: "$19.99", rating: "3.2" },
-  { index:9  , title: "Smart Home Speaker", price: "$99.99", rating: "4.6" },
-  { index:10 , title: "Laptop Cooling Pad", price: "$34.99", rating: "3.3" },
-  { index:11 , title: "USB-C Hub Adapter", price: "$24.99", rating: "4.5" },
-  { index:12 , title: "Adjustable Phone Stand", price: "$15.99", rating: "2.1" },
-  { index:14 , title: "LED Desk Lamp with USB", price: "$27.99", rating: "4.6" },
-  { index:15 , title: "Ergonomic Office Chair", price: "$189.99", rating: "4.8" },
-  { index:16 , title: "Foldable Laptop Stand", price: "$22.99", rating: "4.3" }
-];
+      {filteredProducts.length > 9 ? (
+        <div className='flex justify-center'>
+          <Button onClick={() => setShowAll(!showAll)} E_classes='min-w-44' text={showAll ? 'Show less' : 'Show all'} />
+        </div>
+      ) : null}
+    </section>
+  )
+}
+
+export default FeaturedProducts
 

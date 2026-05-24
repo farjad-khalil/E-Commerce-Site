@@ -1,106 +1,99 @@
-import React, { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useEffect, useState } from 'react'
+import { FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa'
 
 const testimonials = [
   {
-    name: "John Doe",
-    review: "Amazing products and great service. Highly recommended!",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+    name: 'John Doe',
+    role: 'Frontend designer',
+    review: 'The layout feels like a real launch page now. It is easy to scan and the interactions read as intentional.',
   },
   {
-    name: "Jane Smith",
-    review: "The quality is top-notch! Shopping here was a great experience.",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+    name: 'Jane Smith',
+    role: 'Creative director',
+    review: 'The shopping flow is much more convincing. The cart, product cards, and detail pages finally connect.',
   },
   {
-    name: "Michael Lee",
-    review: "Fast delivery and excellent customer support. Will shop again!",
-    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+    name: 'Michael Lee',
+    role: 'Product reviewer',
+    review: 'This is the kind of portfolio project that shows both taste and practical React implementation.',
   },
-];
+]
 
 const Testimonials = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
 
-  // Auto-slide every 4 seconds (pauses on hover)
   useEffect(() => {
-    if (!isHovered) {
-      const interval = setInterval(() => {
-        nextSlide();
-      }, 2000);
-      return () => clearInterval(interval);
+    if (isHovered) {
+      return undefined
     }
-  }, [currentIndex, isHovered]);
+
+    const interval = window.setInterval(() => {
+      setCurrentIndex((value) => (value === testimonials.length - 1 ? 0 : value + 1))
+    }, 3500)
+
+    return () => window.clearInterval(interval)
+  }, [isHovered])
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-  };
+    setCurrentIndex((value) => (value === 0 ? testimonials.length - 1 : value - 1))
+  }
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-  };
+    setCurrentIndex((value) => (value === testimonials.length - 1 ? 0 : value + 1))
+  }
+
+  const activeTestimonial = testimonials[currentIndex]
 
   return (
-    <div
-      className="flex flex-col gap-4 p-6 max-w-2xl mx-auto relative overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Heading */}
-      <div className="font-bold text-3xl text-center">What Our Customers Say</div>
+    <section className='rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/30 backdrop-blur' onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+      <div className='flex items-end justify-between gap-4'>
+        <div>
+          <p className='text-sm uppercase tracking-[0.35em] text-cyan-200/70'>Testimonials</p>
+          <h2 className='mt-2 text-3xl font-semibold text-white'>Proof that the design feels finished.</h2>
+        </div>
+        <div className='hidden gap-2 md:flex'>
+          <button className='rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:bg-white hover:text-slate-950' onClick={prevSlide}>
+            <FaChevronLeft />
+          </button>
+          <button className='rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:bg-white hover:text-slate-950' onClick={nextSlide}>
+            <FaChevronRight />
+          </button>
+        </div>
+      </div>
 
-      {/* Testimonials Container with Slide Animation */}
-      <div className="relative flex items-center justify-center">
-        {/* Left Arrow */}
-        <button
-          className="absolute left-0 text-3xl text-gray-500 hover:text-gray-700 z-10"
-          onClick={prevSlide}
-        >
-          <FaChevronLeft />
-        </button>
-
-        {/* Sliding Testimonial Content */}
-        <div className="w-full flex transition-transform duration-700 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="w-full flex flex-col items-center p-6 rounded-lg shadow-md min-w-full transition-opacity duration-500"
-            >
-              <img
-                src={testimonial.avatar}
-                alt="User Avatar"
-                className="w-14 h-14 rounded-full mb-2"
-              />
-              <div className="font-semibold text-lg">{testimonial.name}</div>
-              <div className="text-gray-700 text-center">{testimonial.review}</div>
+      <div className='mt-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]'>
+        <div className='rounded-[1.5rem] border border-white/10 bg-slate-950/75 p-5'>
+          <div className='flex items-center gap-3'>
+            <div className='flex h-14 w-14 items-center justify-center rounded-full bg-cyan-300 text-slate-950'>
+              <FaStar />
             </div>
-          ))}
+            <div>
+              <div className='text-lg font-semibold text-white'>{activeTestimonial.name}</div>
+              <div className='text-sm text-white/50'>{activeTestimonial.role}</div>
+            </div>
+          </div>
+          <p className='mt-5 text-base leading-8 text-white/70'>“{activeTestimonial.review}”</p>
         </div>
 
-        {/* Right Arrow */}
-        <button
-          className="absolute right-0 text-3xl text-gray-500 hover:text-gray-700 z-10"
-          onClick={nextSlide}
-        >
-          <FaChevronRight />
-        </button>
+        <div className='grid gap-3'>
+          {testimonials.map((testimonial, index) => (
+            <button key={testimonial.name} className={`rounded-[1.5rem] border px-4 py-4 text-left transition ${index === currentIndex ? 'border-cyan-200/30 bg-cyan-300/10' : 'border-white/10 bg-white/5 hover:bg-white/10'}`} onClick={() => setCurrentIndex(index)}>
+              <div className='flex items-center justify-between gap-2'>
+                <div className='text-sm font-semibold text-white'>{testimonial.name}</div>
+                <div className='flex text-cyan-200'>
+                  {[0, 1, 2, 3, 4].map((item) => (
+                    <FaStar key={item} className='text-[10px]' />
+                  ))}
+                </div>
+              </div>
+              <p className='mt-2 text-sm leading-6 text-white/60'>{testimonial.review}</p>
+            </button>
+          ))}
+        </div>
       </div>
+    </section>
+  )
+}
 
-      {/* Navigation Dots */}
-      <div className="flex justify-center gap-2 mt-4">
-        {testimonials.map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full ${currentIndex === index ? "bg-white" : "bg-gray-500"}`}
-            onClick={() => setCurrentIndex(index)}
-          ></div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default Testimonials;
+export default Testimonials
