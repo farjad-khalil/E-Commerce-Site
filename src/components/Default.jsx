@@ -37,8 +37,9 @@ function Default() {
                         <NavLink
                            key={link.label}
                            to={link.to}
+                              end={link.to === '/'}
                            className={({ isActive }) =>
-                              `rounded-full px-4 py-2 text-sm font-medium transition ${isActive ? 'bg-white text-slate-950' : 'text-white/70 hover:bg-white/5 hover:text-white'}`
+                                 `inline-flex min-w-24 items-center justify-center rounded-full px-5 py-2 text-sm font-semibold tracking-wide transition ${isActive ? 'bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-300/20' : 'text-white/70 hover:bg-white/5 hover:text-white'}`
                            }
                         >
                            {link.label}
